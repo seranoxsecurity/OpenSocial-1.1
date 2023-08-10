@@ -1,8 +1,8 @@
 import requests
-import time
-
+import concurrent.futures
 
 username = input('\033[31m{+} Enter username:')
+
 
 #SNAPCHAT
 snapchat = f'https://www.snapchat.com/add/{username}'
@@ -214,32 +214,14 @@ ifttt = f'https://www.ifttt.com/p/{username}'
 # EBAY
 ebay = f'https://www.ebay.com/usr/{username}'
 
-# SLACK
-slack = f'https://{username}.slack.com'
-
-# OKCUPID
-okcupid = f'https://www.okcupid.com/profile/{username}'
-
-# TRACKY
-tracky = f'https://tracky.com/user/~{username}'
-
-# BASECAMP
-basecamp = f'https://{username}.basecamphq.com/login'
-
-#PORNHUB
-pornhub = f'https://www.pornhub.com/users/{username}'
-
-#XVIDEOS
-xvideos = f'https://www.xvideos.com/profiles/{username}'
-
-#PATREON
-patreon = f'https://www.patreon.com/{username}'
-
 #TWITCH
 twitch = f'https://www.twitch.tv/{username}'
 
 #QUORA
 quora = f'https://www.quora.com/profile/{username}'
+
+#LINKEDIN
+linkedin = f'https://www.linkedin.com/in/{username}'
 
 ''' WEBSITE LIST - USE FOR SEARCHING OF USERNAME '''
 WEBSITES = [
@@ -251,8 +233,7 @@ goodreads, instructables, keybase, kongregate, livejournal, angellist, last_fm,
 dribbble, codecademy, gravatar, pastebin, foursquare, roblox, gumroad, newsground,
 wattpad, canva, creative_market, trakt, buzzfeed, hubpages,
 contently, houzz, blipfm, wikipedia, hackernews, deviantart, reverb_nation, designspiration,
-bandcamp, colourlovers, ifttt, ebay, slack, okcupid,tracky, basecamp,pornhub,xvideos,
-patreon,twitch,quora,
+bandcamp, colourlovers, ifttt, ebay, patreon,twitch,quora,linkedin,
 ]
 
 
@@ -281,50 +262,51 @@ def banner():
     \|_______|\|__|     \|_______|\|__| \|__|\_________\|_______|\|_______|\|__|\|__|\|__|\|_______|
                                             \|_________|                                            
   
-  By SeranoxLabs //Credit: w3w3w3                                                                                                  
+  By SeranoxSecurity //Origin Credit: w3w3w3                                                                                                  
 
                                                                                                     
   ''')
 
 
+def outer_func(colour):
+    def inner_function(msg):
+        print(f'{colour}{msg}')
+    return inner_function
+
+GREEN = outer_func('\033[92m')
+YELLOW = outer_func('\033[93m')
+RED = outer_func('\033[91m')
+
+def banner():
+    RED(r'''
+    ... (your banner art) ...
+  By SeranoxSecurity //Credit: w3w3w3
+    ''')
+
 def search():
-    GREEN(f'[+] Searching for username:{username}')
-    time.sleep(0.5)
-    print('.......')
-    time.sleep(0.5)
-    print('.......\n')
-    time.sleep(0.5)
-
-    GREEN(f'[+] Open Social v1.00 is working\n')
-    time.sleep(0.5)
-    print('.......')
-    time.sleep(0.5)
-    print('.......\n')
-    time.sleep(0.5)
-
-    time.sleep(1)
+    GREEN(f'[+] Searching for username: {username}')
+    GREEN(f'[+] Open Social v1.00 is working')
 
     count = 0
     match = True
+
     for url in WEBSITES:
         r = requests.get(url)
 
         if r.status_code == 200:
-            if match == True:
+            if match:
                 GREEN('[+] FOUND MATCHES')
                 match = False
             YELLOW(f'\n{url} - {r.status_code} - OK')
             if username in r.text:
-                GREEN(f'POSITIVE MATCH: Username:{username} - text has been detected in url.')
+                GREEN(f'POSITIVE MATCH: Username:{username} - text has been detected in URL.')
             else:
-                GREEN(f'POSITIVE MATCH: Username:{username} - \033[91mtext has NOT been detected in url, could be a FALSE POSITIVE.')#
+                RED(f'POSITIVE MATCH: Username:{username} - text has NOT been detected in URL.')
         count += 1
 
     total = len(WEBSITES)
     GREEN(f'FINISHED: A total of {count} MATCHES found out of {total} websites.')
 
-
-
-if __name__=='__main__':
+if __name__ == '__main__':
     banner()
     search()
